@@ -1,0 +1,65 @@
+CREATE DATABASE IF NOT EXISTS gopedal;
+USE gopedal;
+CREATE TABLE IF NOT EXISTS addresses(
+    address_id int PRIMARY KEY AUTO_INCREMENT,
+    house_no int,
+    road_no int,
+    area varchar(30),
+    postal_code char(4)  
+    );
+CREATE TABLE IF NOT EXISTS Cycles(
+    cycle_id int PRIMARY KEY AUTO_INCREMENT,
+    fare_rate double,
+    color varchar(15),
+    availability bit,
+    description text,
+    cycle_image blob
+    );
+CREATE TABLE IF NOT EXISTS Customers(
+    customer_id int PRIMARY KEY AUTO_INCREMENT,
+    first_name varchar(20),
+    last_name varchar(20),
+    date_of_birth date,
+    email varchar(30) UNIQUE,
+    phone_no char(11) UNIQUE,
+    address_id int,
+    total_ride_hour time,
+    nid_number varchar(15) UNIQUE, 
+    password varchar(25),
+    FOREIGN KEY (address_id) REFERENCES addresses(address_id)
+    );
+CREATE TABLE IF NOT EXISTS stations(
+    station_id int PRIMARY KEY AUTO_INCREMENT,
+    name varchar(25),
+    address_id int,
+    FOREIGN KEY (address_id) REFERENCES addresses(address_id)
+    );
+
+
+CREATE TABLE IF NOT EXISTS Rentals(
+    rental_id int PRIMARY KEY AUTO_INCREMENT,
+    cycle_id int,
+    station_id int,
+    customer_id int,
+    start_time datetime,
+    end_time datetime,
+
+    FOREIGN KEY(cycle_id) REFERENCES cycles(cycle_id),
+    FOREIGN KEY(station_id) REFERENCES stations(station_id),
+    FOREIGN KEY(customer_id) REFERENCES customers(customer_id)
+    );
+
+
+ALTER TABLE cycles 
+ADD COLUMN rating int;
+
+CREATE TABLE reviews(
+	review_id int AUTO_INCREMENT PRIMARY KEY,
+	cycle_id int,
+    	customer_id int,
+	review text,
+	rating int,
+
+	FOREIGN KEY (cycle_id ) REFERENCES cycles (cycle_id),
+   	 FOREIGN KEY (customer_id ) REFERENCES customers (customer_id)
+);
